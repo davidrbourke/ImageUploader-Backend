@@ -1,13 +1,13 @@
-Image Uploader Backend
+# Image Uploader Backend
 
-# Prerequistes
+## Prerequistes
 * Install Go
 * Setup a storage account in Azure
 
-# Environment variables
+## Environment variables
 Setup environment variables for storage account access
 * IMAGE_STORAGEACCOUNT_NAME
 * IMAGE_STORAGEACCOUNT_KEY
 
-# Run 
+## Run 
 > go run main.go
