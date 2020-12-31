@@ -1,0 +1,13 @@
+display images
+- large
+- small icons
+
+
+delete
+update
+rename
+search/filter
+
+
+authentication
+styling

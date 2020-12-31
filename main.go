@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/davidrbourke/ImageUploader/Backend/images"
-	"github.com/davidrbourke/ImageUploader/Backend/upload"
+	"github.com/davidrbourke/ImageUploader-Backend/images"
+	"github.com/davidrbourke/ImageUploader-Backend/upload"
 )
 
 func setupRoutes() {

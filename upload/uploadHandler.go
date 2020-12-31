@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/davidrbourke/ImageUploader/Backend/utils"
+	"github.com/davidrbourke/ImageUploader-Backend/utils"
 )
 
 // UploadFile api end point handler for uploading an image file

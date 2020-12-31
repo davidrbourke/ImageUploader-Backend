@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/davidrbourke/ImageUploader/Backend/upload"
-	"github.com/davidrbourke/ImageUploader/Backend/utils"
+	"github.com/davidrbourke/ImageUploader-Backend/upload"
+	"github.com/davidrbourke/ImageUploader-Backend/utils"
 )
 
 // GetImages is the API endpoint for handling image requests
@@ -15,11 +15,11 @@ func GetImages(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("get images endpoint hit")
 
-	fileNames, err := upload.GetAllImageNames()
+	imageResponse, err := upload.GetAllImageNames()
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
 
-	json.NewEncoder(w).Encode(fileNames)
+	json.NewEncoder(w).Encode(imageResponse)
 }

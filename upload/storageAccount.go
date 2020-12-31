@@ -5,9 +5,10 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/Azure/azure-storage-blob-go/azblob"
-	"github.com/davidrbourke/ImageUploader/Backend/utils"
+	"github.com/davidrbourke/ImageUploader-Backend/utils"
 	"golang.org/x/net/context"
 )
 
@@ -52,12 +53,14 @@ func ToStorageAccount(uploadFilename string) {
 }
 
 // GetAllImageNames returns a list of all images
-func GetAllImageNames() ([]string, error) {
+func GetAllImageNames() ([]ImageResponse, error) {
 	containerURL, ctx := initialiseBlob()
 
 	fmt.Println("Listing all blobs in the container")
 
-	result := make([]string, 0)
+	qp, accountName := getSAS()
+
+	result := make([]ImageResponse, 0)
 
 	for marker := (azblob.Marker{}); marker.NotDone(); {
 		listBlob, err := containerURL.ListBlobsFlatSegment(ctx, marker, azblob.ListBlobsSegmentOptions{})
@@ -66,12 +69,45 @@ func GetAllImageNames() ([]string, error) {
 		marker = listBlob.NextMarker
 
 		for _, blobInfo := range listBlob.Segment.BlobItems {
-			fmt.Print(" Blob name: " + blobInfo.Name + "\n")
-			result = append(result, blobInfo.Name)
+			urlToImage := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s?%s",
+				accountName, "qs-image", blobInfo.Name, qp)
+
+			fmt.Print(" Blob name: " + blobInfo.Name)
+			result = append(result, ImageResponse{ImageName: blobInfo.Name, ImageURL: urlToImage})
 		}
 	}
 
 	return result, nil
+}
+
+func getSAS() (string, string) {
+	accountName, err := utils.GetStorageAccountName()
+	if err != nil {
+		panic(err)
+	}
+	accountKey, err := utils.GetStorageAccountKey()
+	if err != nil {
+		panic(err)
+	}
+	credential, err := azblob.NewSharedKeyCredential(accountName, accountKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+	sasQueryParams, err := azblob.BlobSASSignatureValues{
+
+		Protocol:      azblob.SASProtocolHTTPS,
+		ExpiryTime:    time.Now().UTC().Add(24 * time.Hour),
+		ContainerName: "qs-image",
+		BlobName:      "",
+		Permissions:   azblob.ContainerSASPermissions{Read: true}.String(),
+	}.NewSASQueryParameters(credential)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	qp := sasQueryParams.Encode()
+
+	return qp, accountName
 }
 
 func initialiseBlob() (azblob.ContainerURL, context.Context) {
