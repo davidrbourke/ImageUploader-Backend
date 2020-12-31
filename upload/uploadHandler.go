@@ -41,7 +41,9 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	ToStorageAccount("temp-images/" + handler.Filename)
+	customFileName := r.Form.Get("customFileName")
+
+	ToStorageAccount("temp-images/"+handler.Filename, customFileName)
 
 	fmt.Fprintf(w, "Successfully uploaded file\n")
 }

@@ -26,13 +26,13 @@ func handleErrors(err error) {
 }
 
 // ToStorageAccount sends an image file to the azure storage account
-func ToStorageAccount(uploadFilename string) {
+func ToStorageAccount(uploadFilename string, customFileName string) {
 
 	containerURL, ctx := initialiseBlob()
 	_, err := containerURL.Create(ctx, azblob.Metadata{}, azblob.PublicAccessNone)
 	handleErrors(err)
 
-	blobURL := containerURL.NewBlockBlobURL(uploadFilename)
+	blobURL := containerURL.NewBlockBlobURL(customFileName)
 	file, err := os.Open(uploadFilename)
 	handleErrors(err)
 
