@@ -53,7 +53,7 @@ func ToStorageAccount(uploadFilename string, customFileName string) {
 }
 
 // GetAllImageNames returns a list of all images
-func GetAllImageNames() ([]ImageResponse, error) {
+func GetAllImageNames(index int, length int) (ImagesWrapperResponse, error) {
 	containerURL, ctx := initialiseBlob()
 
 	fmt.Println("Listing all blobs in the container")
@@ -77,7 +77,16 @@ func GetAllImageNames() ([]ImageResponse, error) {
 		}
 	}
 
-	return result, nil
+	start := (index - 1) * length
+	end := start + length
+	isLastSet := false
+	if end > len(result) {
+		end = len(result)
+		isLastSet = true
+	}
+	paged := result[start:end]
+
+	return ImagesWrapperResponse{Images: paged, IsLastSet: isLastSet}, nil
 }
 
 func getSAS() (string, string) {

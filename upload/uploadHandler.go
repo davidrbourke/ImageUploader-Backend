@@ -29,7 +29,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("File size: %+v\n", handler.Size)
 	fmt.Printf("MIME header: %+v\n", handler.Header)
 
-	//tempFile, err := ioutil.TempFile("temp-images", handler.Filename)
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
 		log.Fatal(err)

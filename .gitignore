@@ -13,3 +13,5 @@
 
 /temp-images/*.jpg
 /temp-images/*.png
+
+__debug_bin

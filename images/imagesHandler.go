@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/davidrbourke/ImageUploader-Backend/upload"
 	"github.com/davidrbourke/ImageUploader-Backend/utils"
@@ -15,7 +16,22 @@ func GetImages(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("get images endpoint hit")
 
-	imageResponse, err := upload.GetAllImageNames()
+	index := r.URL.Query().Get("index")
+	length := r.URL.Query().Get("length")
+
+	iIndex, err := strconv.Atoi(index)
+	if err != nil {
+		iIndex = 1
+	}
+
+	iLength, err := strconv.Atoi(length)
+	if err != nil {
+		iLength = 10
+	}
+
+	fmt.Printf("%s, %s", index, length)
+
+	imageResponse, err := upload.GetAllImageNames(iIndex, iLength)
 	if err != nil {
 		w.WriteHeader(500)
 		return
