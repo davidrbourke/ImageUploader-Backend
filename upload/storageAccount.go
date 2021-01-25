@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Azure/azure-storage-blob-go/azblob"
@@ -53,7 +54,7 @@ func ToStorageAccount(uploadFilename string, customFileName string) {
 }
 
 // GetAllImageNames returns a list of all images
-func GetAllImageNames(index int, length int) (ImagesWrapperResponse, error) {
+func GetAllImageNames(index int, length int, filenameFilter string) (ImagesWrapperResponse, error) {
 	containerURL, ctx := initialiseBlob()
 
 	fmt.Println("Listing all blobs in the container")
@@ -73,7 +74,10 @@ func GetAllImageNames(index int, length int) (ImagesWrapperResponse, error) {
 				accountName, "qs-image", blobInfo.Name, qp)
 
 			fmt.Print(" Blob name: " + blobInfo.Name)
-			result = append(result, ImageResponse{ImageName: blobInfo.Name, ImageURL: urlToImage})
+
+			if filenameFilter == "" || strings.HasPrefix(blobInfo.Name, filenameFilter) {
+				result = append(result, ImageResponse{ImageName: blobInfo.Name, ImageURL: urlToImage})
+			}
 		}
 	}
 

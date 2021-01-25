@@ -18,6 +18,7 @@ func GetImages(w http.ResponseWriter, r *http.Request) {
 
 	index := r.URL.Query().Get("index")
 	length := r.URL.Query().Get("length")
+	filenameFilter := r.URL.Query().Get("filter")
 
 	iIndex, err := strconv.Atoi(index)
 	if err != nil {
@@ -31,7 +32,7 @@ func GetImages(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("%s, %s", index, length)
 
-	imageResponse, err := upload.GetAllImageNames(iIndex, iLength)
+	imageResponse, err := upload.GetAllImageNames(iIndex, iLength, filenameFilter)
 	if err != nil {
 		w.WriteHeader(500)
 		return
